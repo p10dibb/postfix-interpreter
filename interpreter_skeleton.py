@@ -2,6 +2,7 @@
 # The operand stack: define the operand stack and its operations
 opstack = []  #assuming top of the stack is the end of the list
 
+
 # Now define the helper functions to push and pop values on the opstack (i.e, add/remove elements to/from the end of the Python list)
 # Remember that there is a Postscript operator called "pop" so we choose different names for these functions.
 # Recall that `pass` in python is a no-op: replace it with your code.
@@ -11,7 +12,7 @@ def opPop():
     # opPop should return the popped value.
     # The pop() function should call opPop to pop the top value from the opstack, but it will ignore the popped value.
 
-    if len(opstack) !=0:
+    if len(opstack)>0:
         ret=opstack.pop()
         return ret
     else:
@@ -21,12 +22,16 @@ def opPop():
 def opPush(value):
 
    x=str(value)
+
+   val = intTryParse(x)
    if(x[0]=='('):
         v=value[1:len(value)-1]
         opstack.append(v)
+   elif(val[1]):
+       opstack.append(val[0])
    else :
         opstack.append(value)
-   pass
+
 
 #-------------------------- 20% -------------------------------------
 # The dictionary stack: define the dictionary stack and its operations
@@ -63,13 +68,21 @@ def lookup(name):
         v=dictstack.pop()
         if look in v:
             ret=v[look]
+
+            if type(ret)==type([]):
+                interpretSPS(ret)
+                ret=opPop()
             b=True
         L1.append(v)
 
-    for y in range(0,len(L1)-1):
-        dictstack.append(L1.pop)
+    if len(L1)==1:
+        dictstack.append(L1[0])
+    else:
+        for y in range(0,len(L1)-1):
+            dictstack.append(L1.pop)
 
     if(b):
+
         return ret
     else:
 
@@ -124,7 +137,7 @@ def div():
     if n2==0:
         opPush(n1)
         opPush(n2)
-        raise exception("divide by zero")
+        raise Exception("divide by zero")
     else:
         isInt(n1, n2)
         v = n1 / n2
@@ -148,7 +161,7 @@ def lt():
     n2 = opPop()
     n1 = opPop()
     if isInt(n1,n2):
-        v =n1!=n2
+        v =n1<n2
         opstack.append(v)
 
 def gt():
@@ -252,6 +265,42 @@ def stack():
         else:
             print(opstack[len(opstack)-i])
 
+def psIfelse():
+    ifFalse=opPop()
+    ifTrue=opPop()
+    val=opPop()
+    if type(val)!=type(True):
+        opPush(val)
+        opPush(ifTrue)
+        opPush(ifFalse)
+        Exception("Not a valid Boolean value")
+    elif(type(ifTrue)==type([]))and (type(ifFalse)==type([])):
+        opPush(ifTrue[0])
+        opPush(ifFalse[0])
+        vfalse=opPop()
+        vtruth=opPop()
+        if(val):
+            opPush(vtruth)
+        else:
+            opPush(vfalse)
+    else:
+        opPush(val)
+        opPush(ifTrue)
+        opPush(ifFalse)
+
+def psIf():
+    ifTrue=opPop()
+    val=opPop()
+
+    if(type(val)!=type(True)):
+        opPush(val)
+        opPush(ifTrue)
+        Exception("invalid bool")
+    elif(val):
+        opPush(ifTrue[0])
+
+
+
 #--------------------------- 20% -------------------------------------
 # Define the dictionary manipulation operators: psDict, begin, end, psDef
 # name the function for the def operator psDef because def is reserved in Python. Similarly, call the function for dict operator as psDict.
@@ -268,7 +317,7 @@ def begin():
         dictPush(v)
     else:
         opPush(v)
-        raise exception("not a dictionary")
+        raise Exception("not a dictionary")
 
 def end():
     dictPop()
@@ -279,6 +328,13 @@ def psDef():
 
     define(v2, v1)
 
+
+
+
+
+func={"pop":pop,"add":add,"sub":sub,"mul":mul,"div":div,"eq":eq,"lt":lt,"gt":gt,"length":length,"get":get,"getinterval":getinterval,
+      "put":put,"dup":dup,"copy":copy,"clear":clear,"exch":exch,"roll":roll,"stack":stack,"dict":psDict,"begin":begin,"end":end,
+      "def":psDef,"ifelse":psIfelse,"if":psIf }
 
 # --------------------------------------------------------------------
 ## Sample tests #
@@ -495,12 +551,153 @@ def main():
         v=x[1]
         print(x[0]," success:",v())
 
+#from lucas on stackoverflow
+def intTryParse(value):
+    try:
+        return int(value), True
+    except ValueError:
+        return value, False
+
+
+
+
+import re
+def tokenize(s):
+    return re.findall("/?[a-zA-Z()][a-zA-Z0-9_()]*|[-]?[0-9]+|[}{]+|%.*|[^ \t\n]", s)
+
+
+# complete this function
+# The it argument is an iterator.
+# The sequence of return characters should represent a list of properly nested
+# tokens, where the tokens between '{' and '}' is included as a sublist. If the
+# parenteses in the input iterator is not properly nested, returns False.
+def groupMatching2(it):
+    res = []
+    for c in it:
+        if c == '}':
+            return res
+        elif c=='{':
+            # Note how we use a recursive call to group the tokens inside the
+            # inner matching parenthesis.
+            # Once the recursive call returns the code array for the inner
+            # paranthesis, it will be appended to the list we are constructing
+            # as a whole.
+            res.append(groupMatching2(it))
+        else:
+            res.append(c)
+    return False
+
+
+# Complete this function
+# Function to parse a list of tokens and arrange the tokens between { and } braces
+# as code-arrays.
+# Properly nested parentheses are arranged into a list of properly nested lists.
+def parse(L):
+    res = []
+    it = iter(L)
+    for c in it:
+        if c=='}':  #non matching closing paranthesis; return false since there is
+                    # a syntax error in the Postscript code.
+            return False
+        elif c=='{':
+            res.append(groupMatching2(it))
+        else:
+            res.append(c)
+    return res
+
+input10= "/square { dup mul } def"
+
+
+
+# Write the necessary code here; again write
+# auxiliary functions if you need them. This will probably be the largest
+# function of the whole project, but it will have a very regular and obvious
+# structure if you've followed the plan of the assignment.
+#
+def interpretSPS(code): # code is a code array
+
+    for x in code:
+
+        if type(x)==type([]):
+            opPush(x)
+        else:
+            val=intTryParse(x)
+            if func.__contains__(x):
+                func.get(x)()
+            elif((x[0]=="("and x[len(x)-1]==")") or(x[0]=="/")or(type(x)==type([]))):
+                opPush(x)
+            else:
+                look=lookup(x)
+                if (look!=False):
+                    opPush(look)
+                else:
+                    opPush(x)
+
+
+# Copy this to your HW4_part2.py file>
+def interpreter(s): # s is a string
+    interpretSPS(parse(tokenize(s)))
+
+
+input1 = "/square {dup mul } def  (square) 4 square dup 16 eq {(pass)} {(fail)} ifelse stack"
+input42 ="/square {dup mul } def 5 square 25 eq  {(notWorked)} if stack"
+interpreter(input42)
+
+
+
+
+#clear opstack and dictstackclear
+def clear():
+    del opstack[:]
+    del dictstack[:]
+
+
+#testing
+
+
+
+input2 ="""
+    (facto) dup length /n exch def
+    /fact {
+        0 dict begin
+           /n exch def
+           n 2 lt
+           { 1}
+           {n 1 sub fact n mul }
+           ifelse
+        end 
+    } def
+    n fact stack
+    """
+
+input3 = "/fact{0 dict begin /n exch def 1 n -1 1 {mul} for end} def 6 fact stack"
+#interpreter(input3)
+
+input4 = " /lt6 { 6 lt } def 1 2 3 4 5 6 4 -3 roll dup dup lt6 exch 3 gt and {mul mul} if stack clear"
+#interpreter(input4)
+
+input5 = """
+        (CptS355_HW5) 4 3 getinterval 
+        (355) eq 
+        {(You_are_in_CptS355)} if
+         stack 
+        """
+
+input6 = """
+        /pow2 {/n exch def 
+               (pow2_of_n_is) dup 8 n 48 add put 
+                1 n -1 1 {pop 2 mul} for  
+              } def
+        (Calculating_pow2_of_9) dup 20 get 48 sub pow2
+        stack
+        """
 
 
 
 
 
-main()
+
+#main()
 
 
 
