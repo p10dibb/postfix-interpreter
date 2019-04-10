@@ -67,7 +67,7 @@ def define(name, value):
     #add name:value pair to the top dictionary in the dictionary stack. Keep the '/' in the name constant. 
     # Your psDef function should pop the name and value from operand stack and call the “define” function.
 
-def lookup(name):
+def lookup(name,scope):
     b=False
     ret=0;
 
@@ -91,7 +91,7 @@ def lookup(name):
                         dictstack.append(l)
             if type(ret)==type([]):
 
-                interpretSPS(ret)
+                interpretSPS(ret,scope)
                 ret=opPop()
             b=True
 
@@ -314,7 +314,7 @@ def stack():
         else:
             print(opstack[len(opstack)-i])
 
-def psIfelse():
+def psIfelse(scope):
     ifFalse=opPop()
     ifTrue=opPop()
     val=opPop()
@@ -325,22 +325,17 @@ def psIfelse():
         opPush(ifFalse)
         Exception("Not a valid Boolean value")
     elif(type(ifTrue)==type([]))and (type(ifFalse)==type([])):
-        '''
-        opPush(ifTrue[0])
-        opPush(ifFalse[0])
-        vfalse=opPop()
-        vtruth=opPop()
-        '''
+
         if(val):
-            interpretSPS(ifTrue)
+            interpretSPS(ifTrue,scope)
         else:
-            interpretSPS(ifFalse)
+            interpretSPS(ifFalse,scope)
     else:
         opPush(val)
         opPush(ifTrue)
         opPush(ifFalse)
 
-def psIf():
+def psIf(scope):
     ifTrue=opPop()
     val=opPop()
 
@@ -349,7 +344,7 @@ def psIf():
         opPush(ifTrue)
         Exception("invalid bool")
     elif(val):
-        interpretSPS(ifTrue)
+        interpretSPS(ifTrue,scope)
 
 
 
@@ -383,9 +378,10 @@ def psDef():
 
 func={"pop":pop,"add":add,"sub":sub,"mul":mul,"div":div,"eq":eq,"lt":lt,"gt":gt,"length":length,"get":get,"getinterval":getinterval,
       "put":put,"dup":dup,"copy":copy,"clear":clear,"exch":exch,"roll":roll,"stack":stack,"dict":psDict,"begin":begin,"end":end,
-      "def":psDef,"ifelse":psIfelse,"if":psIf }
+      "def":psDef}
+scopefunc={"ifelse":psIfelse,"if":psIf}
 
-def interpretSPS(code): # code is a code array
+def interpretSPS(code,scope): # code is a code array
 
     for x in code:
 
@@ -393,7 +389,9 @@ def interpretSPS(code): # code is a code array
             opPush(x)
         else:
             #val=intTryParse(x)
-            if func.__contains__(x):
+            if scopefunc.__contains__(x):
+                scopefunc.get(x)(scope)
+            elif func.__contains__(x):
                 func.get(x)()
             elif (type(x) == type(1)):
                 opPush(x)
@@ -403,7 +401,7 @@ def interpretSPS(code): # code is a code array
                 opPush(x)
 
             else:
-                look=lookup(x)
+                look=lookup(x,scope)
                 if (look!=False):
                     opPush(look)
                 #else:
@@ -411,7 +409,7 @@ def interpretSPS(code): # code is a code array
 
 
 
-def psFor():
+def psFor(scope):
     doer=opPop()
     max=opPop()
     itter=opPop()
@@ -421,19 +419,19 @@ def psFor():
         if itter <0:
             while strt>=max:
                 opPush(strt)
-                interpretSPS(doer)
+                interpretSPS(doer,scope)
                 strt=strt+itter
         else:
             while strt<=max:
                 opPush(strt)
-                interpretSPS(doer)
+                interpretSPS(doer,scope)
                 strt=strt+itter
 
     else:
         Exception("not valid variables for psFor")
 
 
-func["for"]=psFor
+scopefunc["for"]=psFor
 
 
 
@@ -717,9 +715,12 @@ input10= "/square { dup mul } def"
 
 
 # Copy this to your HW4_part2.py file>
-def interpreter(s): # s is a string
-    interpretSPS(parse(tokenize(s)))
+def interpreter(s,scope): # s is a string
+    interpretSPS(parse(tokenize(s)),scope)
 
+
+input0='''/x 4 def /g {1 x stack} def   /f {/x 7 def g } def f'''
+interpreter(input0,"dynamic")
 
 input1 = "/square {dup mul } def  (square) 4 square dup 16 eq {(pass)} {(fail)} ifelse"
 input42 ="/square {dup mul } def 5 square 25 eq  {(notWorked)} if stack"
@@ -792,7 +793,7 @@ def testPut():
     return True
 
 #print(testPut())
-
+'''
 def testInput1():
     interpreter(input1)
     x=0
@@ -934,3 +935,4 @@ def main():
         clear()
 
 main()
+'''
