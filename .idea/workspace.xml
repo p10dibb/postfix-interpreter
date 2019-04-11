@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/interpreter_skeleton.py" line="697" />
+    <bookmark url="file://$PROJECT_DIR$/interpreter_skeleton.py" line="717" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="935a14ec-bbb4-4d52-857f-7387be10abeb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interpreter_skeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/interpreter_skeleton.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,14 +28,16 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/interpreter_skeleton.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="428">
-              <caret line="415" column="56" selection-start-line="415" selection-start-column="56" selection-end-line="415" selection-end-column="56" />
+            <state relative-caret-position="181">
+              <caret line="660" column="22" selection-start-line="660" selection-start-column="22" selection-end-line="660" selection-end-column="22" />
               <folding>
                 <element signature="e#992#1196#0" />
                 <element signature="e#2061#2365#1" />
                 <element signature="e#2581#3807#1" />
-                <element signature="e#3969#4619#0" />
-                <element signature="e#16798#17458#0" />
+                <element signature="e#4031#5815#0" />
+                <element signature="e#3995#5106#1" />
+                <element signature="e#4158#4246#0" />
+                <element signature="e#16591#16894#0" />
                 <element signature="e#19874#24816#1" />
                 <element signature="e#21710#24904#1" />
               </folding>
@@ -93,7 +96,8 @@
       <find>interpretSPS</find>
       <find>sps</find>
       <find>stack</find>
-      <find>stack</find>
+      <find>stack(</find>
+      <find>clear(</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -264,14 +268,14 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.766129" visible="true" weight="0.37535816" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7818903" weight="0.3654391" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.8172043" visible="true" weight="0.38825214" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7701613" weight="0.35673353" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.21954674" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.23387097" side_tool="true" visible="true" weight="0.37535816" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.1827957" side_tool="true" visible="true" weight="0.38825214" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -288,13 +292,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
-          <line>846</line>
+          <line>866</line>
           <option name="timeStamp" value="65" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
-          <line>497</line>
-          <option name="timeStamp" value="81" />
+          <line>670</line>
+          <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
+          <line>525</line>
+          <option name="timeStamp" value="96" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -330,13 +339,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CptS355_Assign4_Part1_alltests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="167">
@@ -344,16 +346,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/CptS355_Assign4_Part1_alltests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/interpreter_skeleton.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="415" column="56" selection-start-line="415" selection-start-column="56" selection-end-line="415" selection-end-column="56" />
+        <state relative-caret-position="181">
+          <caret line="660" column="22" selection-start-line="660" selection-start-column="22" selection-end-line="660" selection-end-column="22" />
           <folding>
             <element signature="e#992#1196#0" />
             <element signature="e#2061#2365#1" />
             <element signature="e#2581#3807#1" />
-            <element signature="e#3969#4619#0" />
-            <element signature="e#16798#17458#0" />
+            <element signature="e#4031#5815#0" />
+            <element signature="e#3995#5106#1" />
+            <element signature="e#4158#4246#0" />
+            <element signature="e#16591#16894#0" />
             <element signature="e#19874#24816#1" />
             <element signature="e#21710#24904#1" />
           </folding>

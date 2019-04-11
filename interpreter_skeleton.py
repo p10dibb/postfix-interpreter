@@ -64,7 +64,7 @@ def define(name, value):
     global current
 
     if len(dictstack)-1<current:
-        dictstack.append((current-1,d))
+        dictstack.append((0,d))
     else:
         dictstack[current][1][name]=value
 
@@ -145,7 +145,24 @@ def lookup(name,scope):
 current=0
 def lookup(name, scope):
     look="/"+name
+    global current
+    temp=current
     if scope=="dynamic":
+        ret="Falses"
+        for i in range(0,len(dictstack)):
+            if dictstack[len(dictstack)-i-1][1].__contains__(look):
+                ret=dictstack[len(dictstack)-i-1][1][look]
+
+                if type(ret)==type([]):
+                    if type(ret) == type([]):
+                        current+=1
+                        interpretSPS(ret, scope)
+                        ret =opPop()
+                        current-=1
+                return ret
+
+
+        '''
         b = False
         ret = 0;
 
@@ -191,16 +208,18 @@ def lookup(name, scope):
         else:
 
             return False
+'''
+
 
         # return the value associated with name
         # What is your design decision about what to do when there is no definition for “name”? If “name” is not defined, your program should not break, but should give an appropriate error message.
     elif scope=="static":
-        global current
-        temp=current
+
+
         while(1):
             k=len(dictstack)
             if len(dictstack)-1<current:
-                current=0;
+                current-=1;
             else:
                 if dictstack[current][1].__contains__(look):
 
@@ -362,9 +381,6 @@ def copy():
 def pop():
     return opPop()
 
-def clear():
-    for i in range(0,len(opstack)):
-        opstack.pop();
 
 def exch():
     n1=opPop()
@@ -494,8 +510,7 @@ def interpretSPS(code,scope): # code is a code array
         else:
             #val=intTryParse(x)
             if scopefunc.__contains__(x):
-                if x=="stack":
-                    b=2
+
                 scopefunc.get(x)(scope)
             elif func.__contains__(x):
                 func.get(x)()
@@ -507,7 +522,10 @@ def interpretSPS(code,scope): # code is a code array
                 opPush(x)
 
             else:
+                if x=="egg2":
+                    h=323
                 look=lookup(x,scope)
+
                 if (look!="Falses"):
                     opPush(look)
                 #else:
@@ -637,9 +655,10 @@ def testInput20():
 
 
 def testInput21():
+    # added the end
     input21='''/m 50 def
 /n 100 def
-/egg1 {/m 25 def n} def
+/egg1 {/m 25 def n end } def 
 /chic {
  /n 1 def
  /egg2 { n } def
@@ -653,6 +672,7 @@ chic'''
 
     clear()
     interpreter(input21, "dynamic")
+    clear()
 
 
 
@@ -684,8 +704,8 @@ false f'''
     interpreter(input23, "dynamic")
 
     clear()
-#testInput21()
-testInput22()
+testInput21()
+#testInput22()
 #testInput23()
 
 
