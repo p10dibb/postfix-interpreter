@@ -200,7 +200,7 @@ def lookup(name, scope):
         while(1):
             k=len(dictstack)
             if len(dictstack)-1<current:
-                current=0
+                current=0;
             else:
                 if dictstack[current][1].__contains__(look):
 
@@ -217,7 +217,7 @@ def lookup(name, scope):
                     current=dictstack[current][0]
                 else:
                     current=temp
-                    return False
+                    return "Falses"
 
 #--------------------------- 10% -------------------------------------
 # Arithmetic and comparison operators: add, sub, mul, div, mod, eq, lt, gt
@@ -401,13 +401,22 @@ def roll():
             for y in range(0, len(L2)):
                 opstack.append(L2.pop())
 
-def stack():
-
-    for i in range(1,len(opstack)+1):
-        if opstack[len(opstack)-i]=={}:
+def stack(scope):
+    print("===========")
+    print("  "+scope)
+    print("===========")
+    for i in range(1, len(opstack) + 1):
+        if opstack[len(opstack) - i] == {}:
             print("--nostringval--")
         else:
-            print(opstack[len(opstack)-i])
+            print(opstack[len(opstack) - i])
+    for i  in range(0,len(dictstack)):
+        print("=="+str(len(dictstack)-i-1)+"=====0==")
+        for x in dictstack[len(dictstack)-i-1][1] :
+            print(x+" "+str(dictstack[len(dictstack)-i-1][1][x]) )
+
+    print("===========")
+
 
 def psIfelse(scope):
     ifFalse=opPop()
@@ -472,9 +481,9 @@ def psDef():
 
 
 func={"pop":pop,"add":add,"sub":sub,"mul":mul,"div":div,"eq":eq,"lt":lt,"gt":gt,"length":length,"get":get,"getinterval":getinterval,
-      "put":put,"dup":dup,"copy":copy,"clear":clear,"exch":exch,"roll":roll,"stack":stack,"dict":psDict,"begin":begin,"end":end,
+      "put":put,"dup":dup,"copy":copy,"clear":clear,"exch":exch,"roll":roll,"dict":psDict,"begin":begin,"end":end,
       "def":psDef}
-scopefunc={"ifelse":psIfelse,"if":psIf}
+scopefunc={"ifelse":psIfelse,"if":psIf,"stack":stack}
 
 def interpretSPS(code,scope): # code is a code array
 
@@ -485,6 +494,8 @@ def interpretSPS(code,scope): # code is a code array
         else:
             #val=intTryParse(x)
             if scopefunc.__contains__(x):
+                if x=="stack":
+                    b=2
                 scopefunc.get(x)(scope)
             elif func.__contains__(x):
                 func.get(x)()
@@ -497,7 +508,7 @@ def interpretSPS(code,scope): # code is a code array
 
             else:
                 look=lookup(x,scope)
-                if (look!=False):
+                if (look!="Falses"):
                     opPush(look)
                 #else:
                    # opPush(x)
@@ -612,30 +623,15 @@ def interpreter(s,scope): # s is a string
     interpretSPS(parse(tokenize(s)),scope)
 
 
-input20='''/x 4 def /g {x stack} def   /f {/x 7 def g } def f'''
+
 #interpreter(input0,"static")
 
 def testInput20():
+    input20 = '''/x 4 def /g {x stack} def   /f {/x 7 def g } def f'''
     interpreter(input20, "static")
-    print("===========")
-    print("  static")
-    print("===========")
-    stack()
-    print("===========")
-    for x in dictstack:
-        print("=="+str(x[0])+"=====0==")
-        print(x[1])
     clear()
 
     interpreter(input20, "dynamic")
-    print("===========")
-    print("  dynamic")
-    print("===========")
-    stack()
-    print("===========")
-    for x in dictstack:
-        print("==" + str(x[0]) + "=====0==")
-        print(x[1])
     clear()
 
 
@@ -647,33 +643,18 @@ def testInput21():
 /chic {
  /n 1 def
  /egg2 { n } def
- m n 
+ m n
  egg1
  egg2
- } def
+ stack } def
 n
 chic'''
     interpreter(input21, "static")
-    print("===========")
-    print("  static")
-    print("===========")
-    stack()
-    print("===========")
-    for i  in range(0,len(dictstack)):
-        print("=="+str(i)+"====="+str(dictstack[i][0])+"==")
-        print(dictstack[i][1])
-    clear()
 
-    interpreter(input21, "dynamic")
-    print("===========")
-    print("  dynamic")
-    print("===========")
-    stack()
-    print("===========")
-    for x in dictstack:
-        print("==" + str(x[0]) + "=====0==")
-        print(x[1])
     clear()
+    interpreter(input21, "dynamic")
+
+
 
 def testInput22():
     input22='''/x 10 def
@@ -682,30 +663,30 @@ def testInput22():
 /B { /x 30 def /A { x } def C } def
 B'''
     interpreter(input22, "static")
-    print("===========")
-    print("  static")
-    print("===========")
-    stack()
-    print("===========")
-    for i  in range(0,len(dictstack)):
-        print("=="+str(i)+"====="+str(dictstack[i][0])+"==")
-        print(dictstack[i][1])
+
     clear()
 
     interpreter(input22, "dynamic")
-    print("===========")
-    print("  dynamic")
-    print("===========")
-    stack()
-    print("===========")
-    for x in dictstack:
-        print("==" + str(x[0]) + "=====0==")
-        print(x[1])
+
     clear()
 
+def testInput23():
+    input23='''/out true def
+/xand { true eq {pop false} {true eq { false } { true } ifelse} ifelse
+dup /x exch def stack} def
+/myput { out dup /x exch def xand } def
+/f { /out false def myput } def
+false f'''
+    interpreter(input23, "static")
+
+    clear()
+
+    interpreter(input23, "dynamic")
+
+    clear()
 #testInput21()
 testInput22()
-
+#testInput23()
 
 
 input1 = "/square {dup mul } def  (square) 4 square dup 16 eq {(pass)} {(fail)} ifelse"
