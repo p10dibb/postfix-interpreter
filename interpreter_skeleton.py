@@ -45,7 +45,7 @@ def opPush(value):
 
 #-------------------------- 20% -------------------------------------
 # The dictionary stack: define the dictionary stack and its operations
-dictstack = []  #assuming top of the stack is the end of the list
+dictstack = [(0,{})]  #assuming top of the stack is the end of the list
 
 # now define functions to push and pop dictionaries on the dictstack, to define name, and to lookup a name
 def dictPop():
@@ -59,14 +59,32 @@ def dictPush(d):
     #dictPush pushes the dictionary ‘d’ to the dictstack. Note that, your interpreter will call dictPush only when Postscript “begin” operator is called. “begin” should pop the empty dictionary from the opstack and push it onto the dictstack by calling dictPush.
 
 def define(name, value):
+    d = {name: value}
+    #global setnum
+    global current
 
-    d={name:value}
+    if len(dictstack)-1<current:
+        dictstack.append((current-1,d))
+    else:
+        dictstack[current][1][name]=value
 
-    dictstack.append(d)
 
+    '''    if len(dictstack)!=0:
+        dic= dictstack.pop()
+
+        if dic[1].__contains__(name):
+            dictstack.append(dic)
+
+            dictstack.append((current,d))
+        else:
+            dic[1][name]=value
+            dictstack.append(dic)
+    else:
+        dictstack.append((current,d))
+'''
     #add name:value pair to the top dictionary in the dictionary stack. Keep the '/' in the name constant. 
     # Your psDef function should pop the name and value from operand stack and call the “define” function.
-
+'''
 def lookup(name,scope):
     b=False
     ret=0;
@@ -123,6 +141,83 @@ def lookup(name,scope):
 
     # return the value associated with name
     # What is your design decision about what to do when there is no definition for “name”? If “name” is not defined, your program should not break, but should give an appropriate error message.
+    '''
+current=0
+def lookup(name, scope):
+    look="/"+name
+    if scope=="dynamic":
+        b = False
+        ret = 0;
+
+        L1 = []
+
+
+        for x in range(0, len(dictstack)):
+            v = dictstack.pop()
+            if look in v[1]:
+                ret = v[1][look]
+
+                dictstack.append(v)
+                if len(L1) == 1:
+                    l = L1.pop()
+                    if l != {}:
+                        dictstack.append(l)
+                else:
+                    for y in range(0, len(L1)):
+                        l = L1.pop()
+                        if l != {}:
+                            dictstack.append(l)
+                if type(ret) == type([]):
+                    interpretSPS(ret, scope)
+                    ret = opPop()
+                b = True
+
+                return ret
+            L1.append(v)
+
+        if len(L1) == 1:
+            l = L1.pop()
+            if l != {}:
+                dictstack.append(l)
+        else:
+            for y in range(0, len(L1)):
+                l = L1.pop()
+                if l != {}:
+                    dictstack.append(l)
+
+        if (b):
+
+            return ret
+        else:
+
+            return False
+
+        # return the value associated with name
+        # What is your design decision about what to do when there is no definition for “name”? If “name” is not defined, your program should not break, but should give an appropriate error message.
+    elif scope=="static":
+        global current
+        temp=current
+        while(1):
+            k=len(dictstack)
+            if len(dictstack)-1<current:
+                current=0
+            else:
+                if dictstack[current][1].__contains__(look):
+
+                    ret=dictstack[current][1][look]
+                    current = temp
+                    if type(ret) == type([]):
+                        current+=1
+                        interpretSPS(ret, scope)
+                        current-=1
+                        ret = opPop()
+                    current = temp
+                    return ret
+                elif(current!=0):
+                    current=dictstack[current][0]
+                else:
+                    current=temp
+                    return False
 
 #--------------------------- 10% -------------------------------------
 # Arithmetic and comparison operators: add, sub, mul, div, mod, eq, lt, gt
@@ -228,9 +323,6 @@ def getinterval():
     v = "("+s[n1:n2+n1]+")"
     opstack.append(v)
 
-
-
-
 def put():
     asci=opPop()
     place=opPop()
@@ -249,6 +341,9 @@ def put():
     #opPush(ret)
     return ret
 
+def clear():
+    del opstack[:]
+    del dictstack[:]
 
 
 #--------------------------- 25% -------------------------------------
@@ -434,6 +529,409 @@ def psFor(scope):
 scopefunc["for"]=psFor
 
 
+# go on writing test code for ALL of your code here; think about edge cases,
+# and other points where you are likely to make a mistake.
+
+
+
+
+import re
+def tokenize(s):
+    return re.findall("/?[a-zA-Z()][a-zA-Z0-9_()]*|[-]?[0-9]+|[}{]+|%.*|[^ \t\n]", s)
+
+
+# complete this function
+# The it argument is an iterator.
+# The sequence of return characters should represent a list of properly nested
+# tokens, where the tokens between '{' and '}' is included as a sublist. If the
+# parenteses in the input iterator is not properly nested, returns False.
+def groupMatching2(it):
+    res = []
+    for c in it:
+        x=intTryParse(c)
+        if c == '}':
+            return res
+        elif c=='{':
+            # Note how we use a recursive call to group the tokens inside the
+            # inner matching parenthesis.
+            # Once the recursive call returns the code array for the inner
+            # paranthesis, it will be appended to the list we are constructing
+            # as a whole.
+            res.append(groupMatching2(it))
+        elif c == "true":
+            res.append(True)
+        elif c == "false":
+            res.append(False)
+        elif x[1]:
+            res.append(x[0])
+        else:
+            res.append(c)
+    return False
+
+
+# Complete this function
+# Function to parse a list of tokens and arrange the tokens between { and } braces
+# as code-arrays.
+# Properly nested parentheses are arranged into a list of properly nested lists.
+def parse(L):
+    res = []
+    it = iter(L)
+    for c in it:
+        x=intTryParse(c)
+
+        if c=='}':  #non matching closing paranthesis; return false since there is
+                    # a syntax error in the Postscript code.
+            return False
+        elif c=='{':
+            res.append(groupMatching2(it))
+        elif c=="true":
+            res.append(True)
+        elif c=="false":
+            res.append(False)
+
+        elif x[1]:
+            res.append(x[0])
+
+        else:
+            res.append(c)
+    return res
+
+input10= "/square { dup mul } def"
+
+
+
+# Write the necessary code here; again write
+# auxiliary functions if you need them. This will probably be the largest
+# function of the whole project, but it will have a very regular and obvious
+# structure if you've followed the plan of the assignment.
+#
+
+
+# Copy this to your HW4_part2.py file>
+def interpreter(s,scope): # s is a string
+    interpretSPS(parse(tokenize(s)),scope)
+
+
+input20='''/x 4 def /g {x stack} def   /f {/x 7 def g } def f'''
+#interpreter(input0,"static")
+
+def testInput20():
+    interpreter(input20, "static")
+    print("===========")
+    print("  static")
+    print("===========")
+    stack()
+    print("===========")
+    for x in dictstack:
+        print("=="+str(x[0])+"=====0==")
+        print(x[1])
+    clear()
+
+    interpreter(input20, "dynamic")
+    print("===========")
+    print("  dynamic")
+    print("===========")
+    stack()
+    print("===========")
+    for x in dictstack:
+        print("==" + str(x[0]) + "=====0==")
+        print(x[1])
+    clear()
+
+
+
+def testInput21():
+    input21='''/m 50 def
+/n 100 def
+/egg1 {/m 25 def n} def
+/chic {
+ /n 1 def
+ /egg2 { n } def
+ m n 
+ egg1
+ egg2
+ } def
+n
+chic'''
+    interpreter(input21, "static")
+    print("===========")
+    print("  static")
+    print("===========")
+    stack()
+    print("===========")
+    for i  in range(0,len(dictstack)):
+        print("=="+str(i)+"====="+str(dictstack[i][0])+"==")
+        print(dictstack[i][1])
+    clear()
+
+    interpreter(input21, "dynamic")
+    print("===========")
+    print("  dynamic")
+    print("===========")
+    stack()
+    print("===========")
+    for x in dictstack:
+        print("==" + str(x[0]) + "=====0==")
+        print(x[1])
+    clear()
+
+def testInput22():
+    input22='''/x 10 def
+/A { x } def
+/C { /x 40 def A stack } def
+/B { /x 30 def /A { x } def C } def
+B'''
+    interpreter(input22, "static")
+    print("===========")
+    print("  static")
+    print("===========")
+    stack()
+    print("===========")
+    for i  in range(0,len(dictstack)):
+        print("=="+str(i)+"====="+str(dictstack[i][0])+"==")
+        print(dictstack[i][1])
+    clear()
+
+    interpreter(input22, "dynamic")
+    print("===========")
+    print("  dynamic")
+    print("===========")
+    stack()
+    print("===========")
+    for x in dictstack:
+        print("==" + str(x[0]) + "=====0==")
+        print(x[1])
+    clear()
+
+#testInput21()
+testInput22()
+
+
+
+input1 = "/square {dup mul } def  (square) 4 square dup 16 eq {(pass)} {(fail)} ifelse"
+input42 ="/square {dup mul } def 5 square 25 eq  {(notWorked)} if stack"
+#interpreter(input1)
+
+
+
+
+#clear opstack and dictstackclear
+
+
+
+#testing
+
+'''
+
+input2 ="""
+(facto) dup length /n exch def
+/fact {
+ 0 dict begin
+ /n exch def
+ n 2 lt
+ { 1}
+ {n 1 sub fact n mul }
+ ifelse
+ end
+} def
+n fact
+"""
+#interpreter(input2)  #stack =  facto 120
+
+input3 = "/fact{0 dict begin /n exch def 1 n -1 1 {mul} for end} def 6 fact"
+input31="0 dict begin /n exch def 1 n -1 1 {mul} for end"
+#interpreter(input3) #720
+
+input4 =  """
+/lt6 { 6 lt } def
+1 2 3 4 5 6 4 -3 roll
+dup dup lt6 {mul mul mul} if
+"""
+#interpreter(input4)
+
+input5 = " (CptS355_HW5) 4 3 getinterval (355) eq {(You_are_in_CptS355)} if "
+#interpreter(input5)
+
+input6 =  """
+ /pow2 {/n exch def
+ (pow2_of_n_is) dup 8 n 48 add put
+ 1 n -1 1 {pop 2 mul} for
+ } def
+ (Calculating_pow2_of_9) dup 20 get 48 sub pow2
+ """
+#interpreter(input6)
+
+
+def testPut():
+    opPush("(This is a test _)")
+    dup()
+    opPush("/s")
+    exch()
+    psDef()
+    dup()
+    opPush(15)
+    opPush(48)
+    put()
+    if lookup("s") != "(This is a test 0)" or opPop()!= "(This is a test 0)":
+        return False
+    return True
+
+#print(testPut())
+
+
+
+def testInput1():
+    interpreter(input1,"dynamic")
+
+    if(opPop()=="(pass)"and opPop()==16 and opPop()=="(square)"):
+        return True
+    else:
+        return False
+
+#print(testInput1())
+def testInput1():
+    interpreter(input1)
+    x=0
+    if(opPop()=="(pass)"and opPop()==16 and opPop()=="(square)"):
+        return True
+    else:
+        return False
+
+def testInput2():
+    interpreter(input2)
+    if(opPop()==120and opPop()=="(facto)"):
+        return True
+    else:
+        return False
+
+def testInput3():
+    interpreter(input3)
+    if (opPop() ==  720 ):
+        return True
+    else:
+        return False
+
+def testInput4():
+
+    interpreter(input4)
+    if(opPop()==300and opPop()==6 and opPop()==2 and opPop()==1):
+        return True
+    else:
+        return False
+
+def testInput5():
+    interpreter(input5)
+    if(opPop()=="(You_are_in_CptS355)"):
+        return True
+    else:
+        return False
+
+def testInput6():
+    interpreter(input6)
+    if(opPop()==512 and opPop()=="(pow2_of_9_is)"and opPop()=="(Calculating_pow2_of_9)"):
+        return True
+    else:
+        return False
+
+def testInput7():
+    input7="1 2 true {add} {mul} ifelse"
+    interpreter(input7)
+    if opPop()==3:
+        return True
+    return False
+
+def testInput8():
+    input8="1 2 lt {false} {true} ifelse {/n 5 def} {/n 6 def} ifelse n 5 mul"
+    interpreter(input8)
+
+    if opPop()==30:
+        return True
+    return False
+def testInput9():
+    input9="(abcdefghi) 2 3 getinterval dup 1 get"
+    interpreter(input9)
+
+
+    if opPop()==100 and opPop()=="(cde)":
+        return True
+    return False
+
+def testInput10():
+    input10="0 1 99 {1 add} for"
+    interpreter(input10)
+
+    y=True
+    for x in range(1,100):
+        if opPop()!=101-x:
+            y=False
+    return y
+
+def testInput11():
+    input11="99 -1 0 {1 add} for"
+    interpreter(input11)
+
+    y=True
+    for x in range(1,100):
+        if opPop()!=x:
+            y=False
+    return y
+
+def testInput12():
+    input12="99 -2 0 {1 add} for"
+    interpreter(input12)
+    i=2
+    y=True
+    while i <=100:
+        if opPop()!=i:
+            y=False
+        i+=2
+    return y
+
+
+
+
+def testParse1():
+   x= parse(['/pow2', '{', '/n', 'exch', 'def', '(Pow2_of_n_is)', 'dup', '8', 'n',
+           '48', 'add', 'put', '1', 'n', '-1', '1', '{', 'pop', '2', 'mul', '}', 'for',
+           '}', 'def', '(Calculating_pow2_of_9)', 'dup', '20', 'get', '48', 'sub',
+           'pow2', 'stack'])
+   if x==['/pow2', ['/n', 'exch', 'def', '(Pow2_of_n_is)', 'dup', 8, 'n', 48, 'add','put', 1, 'n', -1, 1, ['pop', 2, 'mul'], 'for'], 'def','(Calculating_pow2_of_9)', 'dup', 20, 'get', 48, 'sub', 'pow2', 'stack']:
+       return True
+   return False
+
+def testPares2():
+    x=parse(["(hello)","5","4","true","false","dup"])
+    if x==["(hello)",5,4,True,False,"dup"]:
+        return True
+    return False
+
+def main():
+
+    testCases1=[('add',testAdd),("lookup",testLookup),("exch",testExch),("pop",testPop),('Begin-end',testBeginEnd),
+               ("Roll",testRoll),("copy",testCopy),("clear",testClear),("Dict",testDict),("divide",testDivide),
+               ("Mod",testMod),("gt",testGt),("eq",testEq),("Sub",testSub),("Mul",testMul),("dup",testDup),("Put",testPut),
+               ("getInterval",testGetInterval),("pop",testPop),("get",testGet),("Length",testLength)]
+
+    testCases2=[("testParse1",testParse1),("testParse2",testPares2),("input1",testInput1),("input2",testInput2),("input3",testInput3),("input4",testInput4),
+                ("input5",testInput5),("input6",testInput6),("input7",testInput7),("input8",testInput8),("input9",testInput9),("input10",testInput10),
+                ("input11",testInput11),("input12",testInput12)]
+
+
+    print("part1")
+    for x in testCases1:
+        v=x[1]
+        print(x[0]," success:",v())
+        clear()
+
+    print("part2")
+    for y in testCases2:
+        v=y[1]
+        print(y[0]," success:",v())
+        clear()
+
+main()
+'''
+'''
 
 # --------------------------------------------------------------------
 ## Sample tests #
@@ -635,304 +1133,4 @@ def testLength():
         return False
 
 
-
-# go on writing test code for ALL of your code here; think about edge cases,
-# and other points where you are likely to make a mistake.
-
-
-
-
-import re
-def tokenize(s):
-    return re.findall("/?[a-zA-Z()][a-zA-Z0-9_()]*|[-]?[0-9]+|[}{]+|%.*|[^ \t\n]", s)
-
-
-# complete this function
-# The it argument is an iterator.
-# The sequence of return characters should represent a list of properly nested
-# tokens, where the tokens between '{' and '}' is included as a sublist. If the
-# parenteses in the input iterator is not properly nested, returns False.
-def groupMatching2(it):
-    res = []
-    for c in it:
-        x=intTryParse(c)
-        if c == '}':
-            return res
-        elif c=='{':
-            # Note how we use a recursive call to group the tokens inside the
-            # inner matching parenthesis.
-            # Once the recursive call returns the code array for the inner
-            # paranthesis, it will be appended to the list we are constructing
-            # as a whole.
-            res.append(groupMatching2(it))
-        elif c == "true":
-            res.append(True)
-        elif c == "false":
-            res.append(False)
-        elif x[1]:
-            res.append(x[0])
-        else:
-            res.append(c)
-    return False
-
-
-# Complete this function
-# Function to parse a list of tokens and arrange the tokens between { and } braces
-# as code-arrays.
-# Properly nested parentheses are arranged into a list of properly nested lists.
-def parse(L):
-    res = []
-    it = iter(L)
-    for c in it:
-        x=intTryParse(c)
-
-        if c=='}':  #non matching closing paranthesis; return false since there is
-                    # a syntax error in the Postscript code.
-            return False
-        elif c=='{':
-            res.append(groupMatching2(it))
-        elif c=="true":
-            res.append(True)
-        elif c=="false":
-            res.append(False)
-
-        elif x[1]:
-            res.append(x[0])
-
-        else:
-            res.append(c)
-    return res
-
-input10= "/square { dup mul } def"
-
-
-
-# Write the necessary code here; again write
-# auxiliary functions if you need them. This will probably be the largest
-# function of the whole project, but it will have a very regular and obvious
-# structure if you've followed the plan of the assignment.
-#
-
-
-# Copy this to your HW4_part2.py file>
-def interpreter(s,scope): # s is a string
-    interpretSPS(parse(tokenize(s)),scope)
-
-
-input0='''/x 4 def /g {1 x stack} def   /f {/x 7 def g } def f'''
-interpreter(input0,"dynamic")
-
-input1 = "/square {dup mul } def  (square) 4 square dup 16 eq {(pass)} {(fail)} ifelse"
-input42 ="/square {dup mul } def 5 square 25 eq  {(notWorked)} if stack"
-#interpreter(input1)
-
-
-
-
-#clear opstack and dictstackclear
-def clear():
-    del opstack[:]
-    del dictstack[:]
-
-
-#testing
-
-
-
-input2 ="""
-(facto) dup length /n exch def
-/fact {
- 0 dict begin
- /n exch def
- n 2 lt
- { 1}
- {n 1 sub fact n mul }
- ifelse
- end
-} def
-n fact
-"""
-#interpreter(input2)  #stack =  facto 120
-
-input3 = "/fact{0 dict begin /n exch def 1 n -1 1 {mul} for end} def 6 fact"
-input31="0 dict begin /n exch def 1 n -1 1 {mul} for end"
-#interpreter(input3) #720
-
-input4 =  """
-/lt6 { 6 lt } def
-1 2 3 4 5 6 4 -3 roll
-dup dup lt6 {mul mul mul} if
-"""
-#interpreter(input4)
-
-input5 = " (CptS355_HW5) 4 3 getinterval (355) eq {(You_are_in_CptS355)} if "
-#interpreter(input5)
-
-input6 =  """
- /pow2 {/n exch def
- (pow2_of_n_is) dup 8 n 48 add put
- 1 n -1 1 {pop 2 mul} for
- } def
- (Calculating_pow2_of_9) dup 20 get 48 sub pow2
- """
-#interpreter(input6)
-
-
-def testPut():
-    opPush("(This is a test _)")
-    dup()
-    opPush("/s")
-    exch()
-    psDef()
-    dup()
-    opPush(15)
-    opPush(48)
-    put()
-    if lookup("s") != "(This is a test 0)" or opPop()!= "(This is a test 0)":
-        return False
-    return True
-
-#print(testPut())
-'''
-def testInput1():
-    interpreter(input1)
-    x=0
-    if(opPop()=="(pass)"and opPop()==16 and opPop()=="(square)"):
-        return True
-    else:
-        return False
-
-def testInput2():
-    interpreter(input2)
-    if(opPop()==120and opPop()=="(facto)"):
-        return True
-    else:
-        return False
-
-def testInput3():
-    interpreter(input3)
-    if (opPop() ==  720 ):
-        return True
-    else:
-        return False
-
-def testInput4():
-
-    interpreter(input4)
-    if(opPop()==300and opPop()==6 and opPop()==2 and opPop()==1):
-        return True
-    else:
-        return False
-
-def testInput5():
-    interpreter(input5)
-    if(opPop()=="(You_are_in_CptS355)"):
-        return True
-    else:
-        return False
-
-def testInput6():
-    interpreter(input6)
-    if(opPop()==512 and opPop()=="(pow2_of_9_is)"and opPop()=="(Calculating_pow2_of_9)"):
-        return True
-    else:
-        return False
-
-def testInput7():
-    input7="1 2 true {add} {mul} ifelse"
-    interpreter(input7)
-    if opPop()==3:
-        return True
-    return False
-
-def testInput8():
-    input8="1 2 lt {false} {true} ifelse {/n 5 def} {/n 6 def} ifelse n 5 mul"
-    interpreter(input8)
-
-    if opPop()==30:
-        return True
-    return False
-def testInput9():
-    input9="(abcdefghi) 2 3 getinterval dup 1 get"
-    interpreter(input9)
-
-
-    if opPop()==100 and opPop()=="(cde)":
-        return True
-    return False
-
-def testInput10():
-    input10="0 1 99 {1 add} for"
-    interpreter(input10)
-
-    y=True
-    for x in range(1,100):
-        if opPop()!=101-x:
-            y=False
-    return y
-
-def testInput11():
-    input11="99 -1 0 {1 add} for"
-    interpreter(input11)
-
-    y=True
-    for x in range(1,100):
-        if opPop()!=x:
-            y=False
-    return y
-
-def testInput12():
-    input12="99 -2 0 {1 add} for"
-    interpreter(input12)
-    i=2
-    y=True
-    while i <=100:
-        if opPop()!=i:
-            y=False
-        i+=2
-    return y
-
-
-
-
-def testParse1():
-   x= parse(['/pow2', '{', '/n', 'exch', 'def', '(Pow2_of_n_is)', 'dup', '8', 'n',
-           '48', 'add', 'put', '1', 'n', '-1', '1', '{', 'pop', '2', 'mul', '}', 'for',
-           '}', 'def', '(Calculating_pow2_of_9)', 'dup', '20', 'get', '48', 'sub',
-           'pow2', 'stack'])
-   if x==['/pow2', ['/n', 'exch', 'def', '(Pow2_of_n_is)', 'dup', 8, 'n', 48, 'add','put', 1, 'n', -1, 1, ['pop', 2, 'mul'], 'for'], 'def','(Calculating_pow2_of_9)', 'dup', 20, 'get', 48, 'sub', 'pow2', 'stack']:
-       return True
-   return False
-
-def testPares2():
-    x=parse(["(hello)","5","4","true","false","dup"])
-    if x==["(hello)",5,4,True,False,"dup"]:
-        return True
-    return False
-
-def main():
-
-    testCases1=[('add',testAdd),("lookup",testLookup),("exch",testExch),("pop",testPop),('Begin-end',testBeginEnd),
-               ("Roll",testRoll),("copy",testCopy),("clear",testClear),("Dict",testDict),("divide",testDivide),
-               ("Mod",testMod),("gt",testGt),("eq",testEq),("Sub",testSub),("Mul",testMul),("dup",testDup),("Put",testPut),
-               ("getInterval",testGetInterval),("pop",testPop),("get",testGet),("Length",testLength)]
-
-    testCases2=[("testParse1",testParse1),("testParse2",testPares2),("input1",testInput1),("input2",testInput2),("input3",testInput3),("input4",testInput4),
-                ("input5",testInput5),("input6",testInput6),("input7",testInput7),("input8",testInput8),("input9",testInput9),("input10",testInput10),
-                ("input11",testInput11),("input12",testInput12)]
-
-
-    print("part1")
-    for x in testCases1:
-        v=x[1]
-        print(x[0]," success:",v())
-        clear()
-
-    print("part2")
-    for y in testCases2:
-        v=y[1]
-        print(y[0]," success:",v())
-        clear()
-
-main()
 '''
