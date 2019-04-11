@@ -45,7 +45,7 @@ def opPush(value):
 
 #-------------------------- 20% -------------------------------------
 # The dictionary stack: define the dictionary stack and its operations
-dictstack = [(0,{})]  #assuming top of the stack is the end of the list
+dictstack = []  #assuming top of the stack is the end of the list
 
 # now define functions to push and pop dictionaries on the dictstack, to define name, and to lookup a name
 def dictPop():
@@ -61,13 +61,21 @@ def dictPush(d):
 def define(name, value):
     d = {name: value}
     #global setnum
-    global current
+    x=dictstack.pop()
+    x[1][name]=value
+    dictstack.append(x)
 
+
+
+
+
+
+    ''' 
     if len(dictstack)-1<current:
-        dictstack.append((0,d))
+        dictstack.append((current-1,d))
     else:
         dictstack[current][1][name]=value
-
+    '''
 
     '''    if len(dictstack)!=0:
         dic= dictstack.pop()
@@ -214,17 +222,17 @@ def lookup(name, scope):
         # return the value associated with name
         # What is your design decision about what to do when there is no definition for “name”? If “name” is not defined, your program should not break, but should give an appropriate error message.
     elif scope=="static":
-
+        searcher=len(dictstack)-1
 
         while(1):
             k=len(dictstack)
             if len(dictstack)-1<current:
                 current-=1;
             else:
-                if dictstack[current][1].__contains__(look):
+                if dictstack[searcher][1].__contains__(look):
 
-                    ret=dictstack[current][1][look]
-                    current = temp
+                    ret=dictstack[searcher][1][look]
+
                     if type(ret) == type([]):
                         current+=1
                         interpretSPS(ret, scope)
@@ -233,7 +241,8 @@ def lookup(name, scope):
                     current = temp
                     return ret
                 elif(current!=0):
-                    current=dictstack[current][0]
+                    searcher=dictstack[searcher][0]
+                    current=dictstack[searcher][0]
                 else:
                     current=temp
                     return "Falses"
@@ -501,7 +510,14 @@ func={"pop":pop,"add":add,"sub":sub,"mul":mul,"div":div,"eq":eq,"lt":lt,"gt":gt,
       "def":psDef}
 scopefunc={"ifelse":psIfelse,"if":psIf,"stack":stack}
 
+
+
 def interpretSPS(code,scope): # code is a code array
+
+    if(current-1<0):
+        dictstack.append((0,{}))
+    else:
+        dictstack.append((current-1,{}))
 
     for x in code:
 
@@ -522,7 +538,7 @@ def interpretSPS(code,scope): # code is a code array
                 opPush(x)
 
             else:
-                if x=="egg2":
+                if x=="egg1":
                     h=323
                 look=lookup(x,scope)
 
@@ -531,6 +547,7 @@ def interpretSPS(code,scope): # code is a code array
                 #else:
                    # opPush(x)
 
+    dictstack.pop()
 
 
 def psFor(scope):
@@ -658,7 +675,7 @@ def testInput21():
     # added the end
     input21='''/m 50 def
 /n 100 def
-/egg1 {/m 25 def n end } def 
+/egg1 {/m 25 def n } def 
 /chic {
  /n 1 def
  /egg2 { n } def
@@ -704,9 +721,12 @@ false f'''
     interpreter(input23, "dynamic")
 
     clear()
-testInput21()
+
+c=[2,3,4]
+#print(len(c))
+#testInput21()
 #testInput22()
-#testInput23()
+testInput23()
 
 
 input1 = "/square {dup mul } def  (square) 4 square dup 16 eq {(pass)} {(fail)} ifelse"

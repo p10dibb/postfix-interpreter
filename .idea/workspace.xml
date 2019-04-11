@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/interpreter_skeleton.py" line="717" />
+    <bookmark url="file://$PROJECT_DIR$/interpreter_skeleton.py" line="736" />
+    <bookmark url="file://$PROJECT_DIR$/interpreter_skeleton.py" line="229" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="935a14ec-bbb4-4d52-857f-7387be10abeb" name="Default Changelist" comment="">
@@ -19,7 +20,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/codecs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="167">
+            <state relative-caret-position="5270">
               <caret line="311" selection-start-line="311" selection-end-line="311" />
             </state>
           </provider>
@@ -28,19 +29,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/interpreter_skeleton.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="181">
-              <caret line="660" column="22" selection-start-line="660" selection-start-column="22" selection-end-line="660" selection-end-column="22" />
-              <folding>
-                <element signature="e#992#1196#0" />
-                <element signature="e#2061#2365#1" />
-                <element signature="e#2581#3807#1" />
-                <element signature="e#4031#5815#0" />
-                <element signature="e#3995#5106#1" />
-                <element signature="e#4158#4246#0" />
-                <element signature="e#16591#16894#0" />
-                <element signature="e#19874#24816#1" />
-                <element signature="e#21710#24904#1" />
-              </folding>
+            <state relative-caret-position="152">
+              <caret line="541" selection-start-line="541" selection-end-line="541" />
             </state>
           </provider>
         </entry>
@@ -48,7 +38,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CptS355_Assign4_Part1_alltests.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state relative-caret-position="-238">
               <caret line="1" selection-start-line="1" selection-end-line="1" />
             </state>
           </provider>
@@ -57,8 +47,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/re.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4607">
-              <caret line="274" selection-start-line="274" selection-end-line="274" />
+            <state relative-caret-position="3723">
+              <caret line="222" selection-start-line="222" selection-end-line="222" />
             </state>
           </provider>
         </entry>
@@ -123,7 +113,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -135,6 +124,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -260,22 +250,21 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-6" y="0" width="781" height="830" extended-state="0" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.04032258" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.019828156" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.8172043" visible="true" weight="0.38825214" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7701613" weight="0.35673353" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.8076669" weight="0.29886687" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.7600793" visible="true" weight="0.3555241" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.21954674" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.1827957" side_tool="true" visible="true" weight="0.38825214" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.23992069" side_tool="true" visible="true" weight="0.3555241" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -292,18 +281,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
-          <line>866</line>
+          <line>885</line>
           <option name="timeStamp" value="65" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
-          <line>670</line>
+          <line>686</line>
           <option name="timeStamp" value="92" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
-          <line>525</line>
-          <option name="timeStamp" value="96" />
+          <line>540</line>
+          <option name="timeStamp" value="101" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -332,42 +321,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/re.py">
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4607">
-          <caret line="274" selection-start-line="274" selection-end-line="274" />
+        <state relative-caret-position="5270">
+          <caret line="311" selection-start-line="311" selection-end-line="311" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/codecs.py">
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/re.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="311" selection-start-line="311" selection-end-line="311" />
+        <state relative-caret-position="3723">
+          <caret line="222" selection-start-line="222" selection-end-line="222" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CptS355_Assign4_Part1_alltests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="-238">
           <caret line="1" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/interpreter_skeleton.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="660" column="22" selection-start-line="660" selection-start-column="22" selection-end-line="660" selection-end-column="22" />
-          <folding>
-            <element signature="e#992#1196#0" />
-            <element signature="e#2061#2365#1" />
-            <element signature="e#2581#3807#1" />
-            <element signature="e#4031#5815#0" />
-            <element signature="e#3995#5106#1" />
-            <element signature="e#4158#4246#0" />
-            <element signature="e#16591#16894#0" />
-            <element signature="e#19874#24816#1" />
-            <element signature="e#21710#24904#1" />
-          </folding>
+        <state relative-caret-position="152">
+          <caret line="541" selection-start-line="541" selection-end-line="541" />
         </state>
       </provider>
     </entry>
