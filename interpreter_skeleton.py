@@ -66,90 +66,9 @@ def define(name, value):
     dictstack.append(x)
 
 
-
-
-
-
-    ''' 
-    if len(dictstack)-1<current:
-        dictstack.append((current-1,d))
-    else:
-        dictstack[current][1][name]=value
-    '''
-
-    '''    if len(dictstack)!=0:
-        dic= dictstack.pop()
-
-        if dic[1].__contains__(name):
-            dictstack.append(dic)
-
-            dictstack.append((current,d))
-        else:
-            dic[1][name]=value
-            dictstack.append(dic)
-    else:
-        dictstack.append((current,d))
-'''
     #add name:value pair to the top dictionary in the dictionary stack. Keep the '/' in the name constant. 
     # Your psDef function should pop the name and value from operand stack and call the “define” function.
-'''
-def lookup(name,scope):
-    b=False
-    ret=0;
 
-    L1=[]
-    look='/'+name
-
-    for x in range(0,len(dictstack)):
-        v=dictstack.pop()
-        if look in v:
-            ret=v[look]
-
-            dictstack.append(v)
-            if len(L1) == 1:
-                l = L1.pop()
-                if l != {}:
-                    dictstack.append(l)
-            else:
-                for y in range(0, len(L1)):
-                    l=L1.pop()
-                    if l!={}:
-                        dictstack.append(l)
-            if type(ret)==type([]):
-
-                interpretSPS(ret,scope)
-                ret=opPop()
-            b=True
-
-
-
-
-            return ret
-        L1.append(v)
-
-    if len(L1)==1:
-        l = L1.pop()
-        if l != {}:
-            dictstack.append(l)
-    else:
-        for y in range(0,len(L1)):
-            l = L1.pop()
-            if l != {}:
-                dictstack.append(l)
-
-
-    if(b):
-
-        return ret
-    else:
-
-        return False
-
-
-
-    # return the value associated with name
-    # What is your design decision about what to do when there is no definition for “name”? If “name” is not defined, your program should not break, but should give an appropriate error message.
-    '''
 current=0
 def lookup(name, scope):
     look="/"+name
@@ -169,58 +88,6 @@ def lookup(name, scope):
                         current-=1
                 return ret
 
-
-        '''
-        b = False
-        ret = 0;
-
-        L1 = []
-
-
-        for x in range(0, len(dictstack)):
-            v = dictstack.pop()
-            if look in v[1]:
-                ret = v[1][look]
-
-                dictstack.append(v)
-                if len(L1) == 1:
-                    l = L1.pop()
-                    if l != {}:
-                        dictstack.append(l)
-                else:
-                    for y in range(0, len(L1)):
-                        l = L1.pop()
-                        if l != {}:
-                            dictstack.append(l)
-                if type(ret) == type([]):
-                    interpretSPS(ret, scope)
-                    ret = opPop()
-                b = True
-
-                return ret
-            L1.append(v)
-
-        if len(L1) == 1:
-            l = L1.pop()
-            if l != {}:
-                dictstack.append(l)
-        else:
-            for y in range(0, len(L1)):
-                l = L1.pop()
-                if l != {}:
-                    dictstack.append(l)
-
-        if (b):
-
-            return ret
-        else:
-
-            return False
-'''
-
-
-        # return the value associated with name
-        # What is your design decision about what to do when there is no definition for “name”? If “name” is not defined, your program should not break, but should give an appropriate error message.
     elif scope=="static":
         searcher=len(dictstack)-1
 
@@ -436,6 +303,7 @@ def stack(scope):
         else:
             print(opstack[len(opstack) - i])
     for i  in range(0,len(dictstack)):
+        #+str(dictstack[len(dictstack)-i-1][0])+
         print("=="+str(len(dictstack)-i-1)+"=====0==")
         for x in dictstack[len(dictstack)-i-1][1] :
             print(x+" "+str(dictstack[len(dictstack)-i-1][1][x]) )
@@ -538,8 +406,7 @@ def interpretSPS(code,scope): # code is a code array
                 opPush(x)
 
             else:
-                if x=="egg1":
-                    h=323
+
                 look=lookup(x,scope)
 
                 if (look!="Falses"):
@@ -669,8 +536,6 @@ def testInput20():
     interpreter(input20, "dynamic")
     clear()
 
-
-
 def testInput21():
     # added the end
     input21='''/m 50 def
@@ -690,8 +555,6 @@ chic'''
     clear()
     interpreter(input21, "dynamic")
     clear()
-
-
 
 def testInput22():
     input22='''/x 10 def
@@ -722,11 +585,94 @@ false f'''
 
     clear()
 
-c=[2,3,4]
-#print(len(c))
-#testInput21()
-#testInput22()
-testInput23()
+def testInput24():
+    input24="/x {/y 4 def y } def /z {x /x 5 def x stack} def z"
+
+    interpreter(input24,"static")
+    clear()
+    interpreter(input24,"dynamic")
+    clear()
+
+    '''
+    predicted outcome
+    ==============
+    static
+    ============
+    4
+    5
+    ============
+    ====1====0
+    /x 5
+    ===0====0
+    /x [...]
+    /z [...]
+    
+    
+    '''
+
+def testInput25():
+    input25="/x {/x {/x {/x 5 def x stack} def x} def x} def x"
+
+    interpreter(input25, "static")
+    clear()
+    interpreter(input25, "dynamic")
+    clear()
+
+    '''
+    expected output
+    ========
+    static
+    =======
+    5
+    =======
+    ==3===0==
+    /x 5
+    =2===0==
+    /x  {/x 5 def x stack}
+    ==1====0
+    /x {/x  {/x 5 def x stack}}    
+    ==0=====0===
+    /x {/x {/x  {/x 5 def x stack}}}
+    '''
+
+def testInput26():
+    input26="/x (cow) def /y (milk) def /z {/x (goat) def y x stack} def x z  "
+
+    interpreter(input26, "static")
+    clear()
+    interpreter(input26, "dynamic")
+    clear()
+
+    '''
+    expected output
+    ========
+    static
+    =======
+    goat
+    milk
+    cow
+    =======
+
+    ==1====0
+    /x (goat)    
+    ==0=====0===
+    /x cow
+    /y milk
+    /z [..]
+    '''
+
+def testInput27():
+    input27= "/dog {/fur (brown) def /age 12 def } def"
+
+#testInput20() #T
+#testInput21() #T
+testInput22() #T
+#testInput23() #T
+#testInput24() #T
+#testInput25() #T
+#testInput26() #T
+
+
 
 
 input1 = "/square {dup mul } def  (square) 4 square dup 16 eq {(pass)} {(fail)} ifelse"
