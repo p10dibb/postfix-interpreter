@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/interpreter_skeleton.py" line="683" />
-    <bookmark url="file://$PROJECT_DIR$/interpreter_skeleton.py" line="96" />
+    <bookmark url="file://$PROJECT_DIR$/interpreter_skeleton.py" line="763" />
+    <bookmark url="file://$PROJECT_DIR$/interpreter_skeleton.py" line="108" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="935a14ec-bbb4-4d52-857f-7387be10abeb" name="Default Changelist" comment="">
@@ -20,7 +20,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/codecs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5270">
+            <state relative-caret-position="338">
               <caret line="311" selection-start-line="311" selection-end-line="311" />
             </state>
           </provider>
@@ -29,15 +29,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/interpreter_skeleton.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="114" column="35" lean-forward="true" selection-start-line="114" selection-start-column="35" selection-end-line="114" selection-end-column="35" />
+            <state relative-caret-position="195">
+              <caret line="130" column="36" selection-start-line="130" selection-start-column="36" selection-end-line="130" selection-end-column="36" />
               <folding>
-                <element signature="e#4094#4545#0" />
-                <element signature="e#10462#10593#0" />
-                <element signature="e#16569#16731#0" />
-                <element signature="e#17033#17234#0" />
-                <element signature="e#18382#18807#0" />
-                <element signature="e#22810#26004#1" />
+                <element signature="e#2551#3113#0" />
+                <element signature="e#16348#16825#0" />
+                <element signature="e#16860#17104#0" />
               </folding>
             </state>
           </provider>
@@ -92,10 +89,12 @@
       <find>psf</find>
       <find>interp</find>
       <find>interpretSPS</find>
-      <find>sps</find>
       <find>stack</find>
       <find>clear(</find>
+      <find>ifelse(</find>
+      <find>sps</find>
       <find>stack(</find>
+      <find>lookup(na</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -111,17 +110,16 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-9" />
-    <option name="width" value="978" />
-    <option name="height" value="1039" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="width" value="977" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -133,6 +131,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -259,20 +258,21 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.019828156" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.8037013" weight="0.04249292" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.75941837" weight="0.3555241" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.7937872" visible="true" weight="0.32577905" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.752809" weight="0.34560907" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.21954674" />
-      <window_info active="true" anchor="bottom" id="Event Log" order="9" sideWeight="0.19629875" side_tool="true" visible="true" weight="0.22521247" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.20621282" side_tool="true" visible="true" weight="0.32577905" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -289,13 +289,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
-          <line>552</line>
-          <option name="timeStamp" value="92" />
+          <line>635</line>
+          <option name="timeStamp" value="106" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
-          <line>409</line>
-          <option name="timeStamp" value="105" />
+          <line>577</line>
+          <option name="timeStamp" value="109" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
+          <line>84</line>
+          <option name="timeStamp" value="114" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/interpreter_skeleton.py</url>
+          <line>103</line>
+          <option name="timeStamp" value="117" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -324,17 +334,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5270">
-          <caret line="311" selection-start-line="311" selection-end-line="311" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/re.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3723">
           <caret line="222" selection-start-line="222" selection-end-line="222" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="311" selection-start-line="311" selection-end-line="311" />
         </state>
       </provider>
     </entry>
@@ -347,15 +357,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/interpreter_skeleton.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="114" column="35" lean-forward="true" selection-start-line="114" selection-start-column="35" selection-end-line="114" selection-end-column="35" />
+        <state relative-caret-position="195">
+          <caret line="130" column="36" selection-start-line="130" selection-start-column="36" selection-end-line="130" selection-end-column="36" />
           <folding>
-            <element signature="e#4094#4545#0" />
-            <element signature="e#10462#10593#0" />
-            <element signature="e#16569#16731#0" />
-            <element signature="e#17033#17234#0" />
-            <element signature="e#18382#18807#0" />
-            <element signature="e#22810#26004#1" />
+            <element signature="e#2551#3113#0" />
+            <element signature="e#16348#16825#0" />
+            <element signature="e#16860#17104#0" />
           </folding>
         </state>
       </provider>

@@ -80,13 +80,25 @@ def lookup(name, scope):
             if dictstack[len(dictstack)-i-1][1].__contains__(look):
                 ret=dictstack[len(dictstack)-i-1][1][look]
 
+
                 if type(ret)==type([]):
                     if type(ret) == type([]):
-                        current+=1
+                        current += 1
+                        if (current - 1 < 0):
+                            dictstack.append((0, {}))
+                        else:
+                            dictstack.append((current - 1, {}))
+
                         interpretSPS(ret, scope)
+                        dictstack.pop()
                         ret =opPop()
                         current-=1
+
                 return ret
+
+            else:
+                current -= 1
+
 
     elif scope=="static":
         searcher=len(dictstack)-1
@@ -101,15 +113,22 @@ def lookup(name, scope):
                     ret=dictstack[searcher][1][look]
 
                     if type(ret) == type([]):
-                        current+=1
+
+                        current += 1
+                        if (current - 1 < 0):
+                            dictstack.append((0, {}))
+                        else:
+                            dictstack.append((current - 1, {}))
+
                         interpretSPS(ret, scope)
+                        dictstack.pop()
                         current-=1
                         ret = opPop()
                     current = temp
                     return ret
                 elif(current!=0):
                     searcher=dictstack[searcher][0]
-                    current=dictstack[searcher][0]
+                    current=searcher
                 else:
                     current=temp
                     return "Falses"
@@ -294,6 +313,8 @@ def roll():
                 opstack.append(L2.pop())
 
 def stack(scope):
+
+
     print("===========")
     print("  "+scope)
     print("===========")
@@ -304,7 +325,7 @@ def stack(scope):
             print(opstack[len(opstack) - i])
     for i  in range(0,len(dictstack)):
         #+str(dictstack[len(dictstack)-i-1][0])+
-        print("=="+str(len(dictstack)-i-1)+"=====0==")
+        print("=="+str(len(dictstack)-i-1)+"====="+str(dictstack[len(dictstack)-i-1][0])+"==")
         for x in dictstack[len(dictstack)-i-1][1] :
             print(x+" "+str(dictstack[len(dictstack)-i-1][1][x]) )
 
@@ -312,6 +333,7 @@ def stack(scope):
 
 
 def psIfelse(scope):
+    global current
     ifFalse=opPop()
     ifTrue=opPop()
     val=opPop()
@@ -322,7 +344,7 @@ def psIfelse(scope):
         opPush(ifFalse)
         Exception("Not a valid Boolean value")
     elif(type(ifTrue)==type([]))and (type(ifFalse)==type([])):
-
+     #  current-=1
         if(val):
             interpretSPS(ifTrue,scope)
         else:
@@ -382,10 +404,7 @@ scopefunc={"ifelse":psIfelse,"if":psIf,"stack":stack}
 
 def interpretSPS(code,scope): # code is a code array
 
-    if(current-1<0):
-        dictstack.append((0,{}))
-    else:
-        dictstack.append((current-1,{}))
+
 
     for x in code:
 
@@ -414,7 +433,6 @@ def interpretSPS(code,scope): # code is a code array
                 #else:
                    # opPush(x)
 
-    dictstack.pop()
 
 
 def psFor(scope):
@@ -522,7 +540,11 @@ input10= "/square { dup mul } def"
 
 # Copy this to your HW4_part2.py file>
 def interpreter(s,scope): # s is a string
-    interpretSPS(parse(tokenize(s)),scope)
+     dictstack.append((0,{}))
+   # if scope=="static":
+     interpretSPS(parse(tokenize(s)),scope)
+ #   else:
+       # dyingterptetersps(parse(tokenize(s)),scope)
 
 
 
@@ -664,13 +686,71 @@ def testInput26():
 def testInput27():
     input27= "/dog {/fur (brown) def /age 12 def } def"
 
+def testInput28():
+    input28 = '''
+            /class 5 def
+            /yogurt { class } def 
+            /fast { /class 7 def yogurt } def 
+            fast
+            /multiply { 
+                /s {  6 mul} def
+                s class mul
+             } def
+            /subtract { multiply class mul class sub } def
+            multiply
+            subtract
+            fast
+            stack
+'''
+    interpreter(input28, "static")
+    clear()
+    interpreter(input28, "dynamic")
+    clear()
+
+def testInput29():
+    input29 = """
+        /x 4 def 
+        x 3 
+        eq 
+        {x 1 add /result exch def} 
+        {x 4 eq 
+            {x 2 add /result exch def} 
+            {x 3 add /result exch def} 
+        ifelse }
+        ifelse
+        result
+        stack
+"""
+    interpreter(input29, "static")
+    clear()
+    interpreter(input29, "dynamic")
+    clear()
+
+def testInput210():
+    input210='''
+             /x 10 def
+            /A { x } def
+            /B { /x 30 def /A { x stack } def /C { /x 40 def A } def C } def
+                B
+    '''
+    interpreter(input210, "static")
+    clear()
+    interpreter(input210, "dynamic")
+    clear()
+
+
 #testInput20() #T
 #testInput21() #T
-testInput22() #T
+#testInput22() #T
 #testInput23() #T
 #testInput24() #T
 #testInput25() #T
 #testInput26() #T
+
+#testInput28()
+#testInput29()
+testInput210()
+
 
 
 
