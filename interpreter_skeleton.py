@@ -739,17 +739,17 @@ def testInput210():
     clear()
 
 
-#testInput20() #T
-#testInput21() #T
-#testInput22() #T
-#testInput23() #T
-#testInput24() #T
-#testInput25() #T
-#testInput26() #T
+testInput20() #T
+testInput21() #T
+testInput22() #T
+testInput23() #T
+testInput24() #T
+testInput25() #T
+testInput26() #T
 
-#testInput28()
-#testInput29()
-testInput210()
+testInput28()
+testInput29()#T
+testInput210()#T
 
 
 
